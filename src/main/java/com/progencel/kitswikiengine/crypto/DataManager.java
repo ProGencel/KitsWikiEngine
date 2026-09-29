@@ -6,39 +6,30 @@ import com.badlogic.gdx.utils.Json;
 
 public class DataManager {
 
-    private String appName = "KitswikiApp";
+    private String appName;
+
+    public DataManager()
+    {
+        this.appName = "App";
+    }
+
+    public DataManager(String appName)
+    {
+        this.appName = appName;
+    }
 
     /**
      * The recommended HMAC key is 32 bytes long and encoded in Base64.
      * The HMAC key should be stored in the environment variables.
      */
-    public void setHmacKey(String key, String appName)
-    {
-        this.appName = appName;
-        HmacSigner.setHmacKeyBase64(key);
-    }
 
     public void setHmacKey(String key)
     {
         HmacSigner.setHmacKeyBase64(key);
     }
 
-    private FileHandle getSaveFile()
-    {
-        String os = System.getProperty("os.name").toLowerCase();
-        String base;
-
-        if (os.contains("win")) {
-            String appData = System.getenv("APPDATA");
-            base = appData != null ? appData : System.getProperty("user.home");
-        } else if (os.contains("mac")) {
-            base = System.getProperty("user.home") + "/Library/Application Support";
-        } else {
-            String xdg = System.getenv("XDG_DATA_HOME");
-            base = xdg != null ? xdg : System.getProperty("user.home") + "/.local/share";
-        }
-
-        FileHandle dir = Gdx.files.absolute(base + "/" + appName);
+    private FileHandle getSaveFile() {
+        FileHandle dir = Gdx.files.local(this.appName);
         if (!dir.exists()) {
             dir.mkdirs();
         }
