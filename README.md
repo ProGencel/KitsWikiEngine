@@ -25,5 +25,3 @@ dependencies {
 	        implementation 'com.github.ProGencel:KitswikiEngine:Tag'
 	}
 ```
-For more information
-https://jitpack.io/#ProGencel/KitswikiEngine
