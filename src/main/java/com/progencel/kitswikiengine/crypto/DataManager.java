@@ -29,7 +29,28 @@ public class DataManager {
     }
 
     private FileHandle getSaveFile() {
-        FileHandle dir = Gdx.files.local(this.appName);
+        String base;
+
+        if (Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Android) {
+            FileHandle dir = Gdx.files.local(this.appName);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            return dir.child("save.json");
+        }
+
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            String appData = System.getenv("APPDATA");
+            base = appData != null ? appData : System.getProperty("user.home");
+        } else if (os.contains("mac")) {
+            base = System.getProperty("user.home") + "/Library/Application Support";
+        } else {
+            String xdg = System.getenv("XDG_DATA_HOME");
+            base = xdg != null ? xdg : System.getProperty("user.home") + "/.local/share";
+        }
+
+        FileHandle dir = Gdx.files.absolute(base + "/" + this.appName);
         if (!dir.exists()) {
             dir.mkdirs();
         }
